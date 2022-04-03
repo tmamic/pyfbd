@@ -21,9 +21,9 @@ class FBDFunc:
         _check_vars(inputs)
         _check_vars(outputs)
         _check_vars(state)
-        self.inputs = tuple((inp for inp in inputs))
-        self.outputs = tuple((out for out in outputs))
-        self.state = tuple((sta for sta in state))
+        self.inputs = {inp.name for inp in inputs}
+        self.outputs = {out.name for out in outputs}
+        self.state = {sta.name for sta in state}
 
     def dump(self) -> dict:
         """Convert the data content of this class to dictionary."""
