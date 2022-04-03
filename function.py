@@ -6,12 +6,21 @@
 """
 
 # internal
-from pyfbd.variable import FBDVar
+from variable import FBDVar
+
+def _check_vars(vars) -> None:
+    """Raise error if any of the objects in supplied iterable is not a valid FBD variable."""
+    for var in vars:
+        if type(var) is not FBDVar:
+            raise TypeError(f"Object {var} is not a valid FBD variable.")
 
 class FBDFunc:
     """Basic building block of FBD. Represents a node in the functional graph."""
 
     def __init__(self, inputs: "tuple[FBDVar]", outputs: "tuple[FBDVar]", state: "tuple[FBDVar]") -> None:
+        _check_vars(inputs)
+        _check_vars(outputs)
+        _check_vars(state)
         self.inputs = tuple((inp for inp in inputs))
         self.outputs = tuple((out for out in outputs))
         self.state = tuple((sta for sta in state))
