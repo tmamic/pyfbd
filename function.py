@@ -16,18 +16,41 @@ def _check_vars(vars) -> None:
 
 class FBDFunc:
     """Basic building block of FBD. Represents a node in the functional graph."""
+    DATAMODEL = ("name",)
 
-    def __init__(self, inputs: "tuple[FBDVar]", outputs: "tuple[FBDVar]", state: "tuple[FBDVar]") -> None:
+    def __init__(self, name: str, inputs: "tuple[FBDVar]", outputs: "tuple[FBDVar]", state: "tuple[FBDVar]") -> None:
         _check_vars(inputs)
         _check_vars(outputs)
         _check_vars(state)
-        self.inputs = {inp.name for inp in inputs}
-        self.outputs = {out.name for out in outputs}
-        self.state = {sta.name for sta in state}
+        self.name = name
+        self.inputs = {inp.name: inp for inp in inputs}
+        self.outputs = {out.name: out for out in outputs}
+        self.state = {sta.name: sta for sta in state}
+
+    def get_input_var(self, name: str) -> FBDVar:
+        """Retrieve an input by name."""
+        return self.inputs[name]
+
+    def get_output_var(self, name: str) -> FBDVar:
+        """Retrieve an output by name."""
+        return self.outputs[name]
+
+    def get_state_var(self, name: str) -> FBDVar:
+        """Retrieve a state variable by name."""
+        return self.state[name]
 
     def dump(self) -> dict:
         """Convert the data content of this class to dictionary."""
+        ret = {key: self.__dict__[key] for key in FBDFunc.DATAMODEL}
+        ret['inputs'] = [inp.dump() for _, inp in self.inputs.items()]
+        ret['outputs'] = [out.dump() for _, out in self.outputs.items()]
+        ret['state'] = [sta.dump() for _, sta in self.state.items()]
+        return ret
 
     @staticmethod
     def load(data: dict) -> "FBDFunc":
         """Construct a class from data content."""
+        inputs = tuple(FBDVar.load(inp) for inp in data['inputs'])
+        outputs = tuple(FBDVar.load(out) for out in data['outputs'])
+        state = tuple(FBDVar.load(sta) for sta in data['state'])
+        return FBDFunc(data['name'], inputs, outputs, state)

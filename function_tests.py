@@ -10,9 +10,21 @@ import unittest
 
 # internal
 from pyfbd.function import FBDFunc
+from variable import FBDVar
 
 class FunctionTests(unittest.TestCase):
     """All unit tests for function.py should be contained here."""
+
+    def test_dump_and_load(self):
+        tstin = (FBDVar("X", "ttype"), FBDVar("Y", "ttype"))
+        tststate = (FBDVar("S", "ttype"),)
+        tstout = (FBDVar("O", "ttype"),)
+        func = FBDFunc("tstfunc", tstin, tstout, tststate)
+        img = FBDFunc.load(func.dump())
+
+        # ensure invalid var name fails
+        with self.assertRaises(KeyError):
+            img.get_input_var("S")
 
 if __name__ == "__main__":
     unittest.main()
