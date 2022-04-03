@@ -18,6 +18,7 @@ class VariableTests(unittest.TestCase):
         var = FBDVar("tstvar", "dtype")
         img = FBDVar.load(var.dump())
         self.assertEqual(var.name, img.name)
+        self.assertEqual(var.type, img.type)
 
 if __name__ == "__main__":
     unittest.main()
