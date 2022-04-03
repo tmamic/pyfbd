@@ -7,13 +7,11 @@
 
 class FBDVar:
     """Variable descriptor class. Used to build data model of an FBD."""
-    DATAMODEL = ("name", "type", "inival", "val")
+    DATAMODEL = ("name", "type")
 
-    def __init__(self, name: str, type: str, inival, **metadata) -> None:
+    def __init__(self, name: str, type: str) -> None:
         self.name = name
         self.type = type
-        self.val = inival
-        self.inival = inival
 
     def dump(self) -> dict:
         """Convert the data content of this class to dictionary."""

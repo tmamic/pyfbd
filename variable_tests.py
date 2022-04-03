@@ -15,10 +15,9 @@ class VariableTests(unittest.TestCase):
     """All unit tests for variable.py should be contained here."""
 
     def test_dump_and_load(self):
-        var = FBDVar("tstvar", 43)
+        var = FBDVar("tstvar", "dtype")
         img = FBDVar.load(var.dump())
         self.assertEqual(var.name, img.name)
-        self.assertEqual(var.val, img.val)
 
 if __name__ == "__main__":
     unittest.main()
