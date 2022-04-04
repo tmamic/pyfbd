@@ -10,7 +10,7 @@ import unittest
 
 # internal
 from pyfbd.function import FBDFunc
-from variable import FBDVar
+from pyfbd.variable import FBDVar
 
 class FunctionTests(unittest.TestCase):
     """All unit tests for function.py should be contained here."""
@@ -21,6 +21,10 @@ class FunctionTests(unittest.TestCase):
         tstout = (FBDVar("O", "ttype"),)
         func = FBDFunc("tstfunc", tstin, tstout, tststate)
         img = FBDFunc.load(func.dump())
+
+        # ensure object equivalence, but not identity
+        self.assertIsNot(func, img)
+        self.assertEqual(func, img)
 
         # ensure invalid var name fails
         with self.assertRaises(KeyError):

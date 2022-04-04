@@ -6,7 +6,8 @@
 """
 
 # internal
-from variable import FBDVar
+from pyfbd.variable import FBDVar
+from pyfbd.fbdobj import FBDObj
 
 def _check_vars(vars) -> None:
     """Raise error if any of the objects in supplied iterable is not a valid FBD variable."""
@@ -14,7 +15,7 @@ def _check_vars(vars) -> None:
         if type(var) is not FBDVar:
             raise TypeError(f"Object {var} is not a valid FBD variable.")
 
-class FBDFunc:
+class FBDFunc(FBDObj):
     """Basic building block of FBD. Represents a node in the functional graph."""
     DATAMODEL = ("name",)
 
