@@ -8,7 +8,10 @@
 # built-in
 import json
 
-class FBDVar:
+# internal
+from pyfbd.fbdobj import FBDObj
+
+class FBDVar(FBDObj):
     """Variable descriptor class. Used to build data model of an FBD."""
     DATAMODEL = ("name", "type")
 
@@ -19,18 +22,6 @@ class FBDVar:
     def dump(self) -> dict:
         """Convert the data content of this class to dictionary."""
         return {key: self.__dict__[key] for key in FBDVar.DATAMODEL}
-
-    def __str__(self) -> str:
-        return json.dumps(self.dump())
-
-    def __hash__(self) -> int:
-        return hash(str(self))
-
-    def __eq__(self, __o: object) -> bool:
-        if type(__o) is not FBDVar:
-            # we are type-racists here
-            return False
-        return hash(self) == hash(__o)
 
     @staticmethod
     def load(data: dict) -> "FBDVar":
