@@ -26,6 +26,15 @@ class FunctionTests(unittest.TestCase):
         self.assertIsNot(func, img)
         self.assertEqual(func, img)
 
+        # ensure that different funcs are not seen as equal
+        spoofs = [FBDFunc("tstfunc", tstin, tstout, tuple()),
+                  FBDFunc("tstfunc", tstin, tuple(), tststate),
+                  FBDFunc("tstfunc", tuple(), tstout, tststate),
+                  FBDFunc("not tstfunc", tstin, tstout, tststate),
+                  FBDFunc("tstfunc", tstin, tstout, (FBDVar("not O", "ttype"),))]
+        for spoof in spoofs:
+            self.assertNotEqual(func, spoof)
+
         # ensure invalid var name fails
         with self.assertRaises(KeyError):
             img.get_input_var("S")
