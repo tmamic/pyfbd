@@ -1,10 +1,9 @@
 Done:
     2022-04-04:
         - [??] basic data models for each element of the FBD hierarchy
-        - [1.1] added hash and comparison for FBDVar
+        - [1] added hash and comparison via base object (FBDObj)
 
 Planned:
-    [1] expand data models with hash generators such that same hash implies equivalence for
-        - [1.1] variable
-        - [1.2] function
-        - [1.3] diagram
+    [2] build up functions for manipulating the diagram object
+        [2.1] add a function object to the diagram
+        [2.2] figure out a good way to connect inputs and outputs of functions
