@@ -17,8 +17,12 @@ class VariableTests(unittest.TestCase):
     def test_dump_and_load(self):
         var = FBDVar("tstvar", "dtype")
         img = FBDVar.load(var.dump())
-        self.assertEqual(var.name, img.name)
-        self.assertEqual(var.type, img.type)
+        # confirm that base data content is intact
+        for item in FBDVar.DATAMODEL:
+            self.assertEqual(var.__dict__[item], img.__dict__[item])
+        # ensure that var and image are equal, but not the same object
+        self.assertEqual(var, img)
+        self.assertIsNot(var, img)
 
 if __name__ == "__main__":
     unittest.main()
