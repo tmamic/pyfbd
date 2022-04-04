@@ -5,7 +5,10 @@
 @when:  2022-04-04
 """
 
-class FBDiagram:
+# internal
+from pyfbd.fbdobj import FBDObj
+
+class FBDiagram(FBDObj):
     """Data model of an FBD containing multiple functions and their interconnections."""
 
     def __init__(self) -> None:
