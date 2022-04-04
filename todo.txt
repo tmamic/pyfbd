@@ -1,0 +1,9 @@
+Done:
+    2022-04-04:
+        - [#??] basic data models for each element of the FBD hierarchy
+
+Planned:
+    expand data models with hash generators such that same hash implies equivalence for
+        - [#1] variable
+        - [#2] function
+        - [#3] diagram
