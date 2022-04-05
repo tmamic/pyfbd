@@ -22,11 +22,12 @@ class FBDiagram(FBDObj):
     def dump(self) -> dict:
         """Convert diagram data to dictionary."""
         ret = {key: self.__dict__[key] for key in FBDiagram.DATAMODEL}
+        ret['func_blocks'] = {uid: func.dump() for uid, func in self.function_blocks.items()}
         return ret
 
     def store(self) -> dict:
         """Store object with added metadata to dictionary. Prefered when saving state of instance."""
-        ret = {key: self.__dict__[key] for key in FBDiagram.DATAMODEL}
+        ret = self.dump()
         ret.update({key: self.__dict__[key] for key in FBDiagram.METADATA})
         return ret
 
@@ -34,7 +35,15 @@ class FBDiagram(FBDObj):
     def load(data: dict) -> "FBDiagram":
         """Construct diagram object from data."""
         ret = FBDiagram()
-        ret.__dict__.update(data)
+        for key in FBDiagram.DATAMODEL:
+            # we are okay with keyerror here - datamodel must be complete
+            ret.__dict__[key] = data[key]
+        for key in FBDiagram.METADATA:
+            # we are fine with metadata missing
+            if key in data:
+                ret.__dict__[key] = data[key]
+        for uid, fdump in data['func_blocks'].items():
+            ret.function_blocks[uid] = FBDFunc.load(fdump)
         return ret
 
     def _get_next_id(self) -> str:
