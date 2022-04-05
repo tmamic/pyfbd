@@ -5,6 +5,9 @@
 @when:  2022-04-04
 """
 
+# built-in
+import json
+
 # internal
 from pyfbd.fbdobj import FBDObj
 from pyfbd.function import FBDFunc
@@ -58,3 +61,8 @@ class FBDiagram(FBDObj):
         self.function_blocks[uid] = func
         self._unique_functions.add(func)
         return uid
+
+    def save(self, fname: str) -> None:
+        """Utility function - store the diagram as file."""
+        with open(fname, "w", encoding="utf-8") as file:
+            json.dump(self.dump(), file, indent=1)
