@@ -42,6 +42,13 @@ class DiagramTests(unittest.TestCase):
         _ = sch1.add_function(f2)
         self.assertNotEqual(sch1, sch2)
 
+        _ = sch2.add_function(f2)
+        self.assertEqual(sch1, sch2)
+
+        _ = sch1.add_function(f1)
+        _ = sch2.add_function(f2)
+        self.assertNotEqual(sch1, sch2)
+
     def test_uid(self):
         diagram = FBDiagram()
         func = FBDFunc("tstfunc", tuple(), tuple(), tuple())
