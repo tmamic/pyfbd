@@ -11,7 +11,8 @@ from pyfbd.function import FBDFunc
 
 class FBDiagram(FBDObj):
     """Data model of an FBD containing multiple functions and their interconnections."""
-    DATAMODEL = ("_cid",)
+    DATAMODEL = tuple()
+    METADATA = ("_cid",)
 
     def __init__(self) -> None:
         self._cid = 0
@@ -20,12 +21,21 @@ class FBDiagram(FBDObj):
 
     def dump(self) -> dict:
         """Convert diagram data to dictionary."""
-        return {}
+        ret = {key: self.__dict__[key] for key in FBDiagram.DATAMODEL}
+        return ret
+
+    def store(self) -> dict:
+        """Store object with added metadata to dictionary. Prefered when saving state of instance."""
+        ret = {key: self.__dict__[key] for key in FBDiagram.DATAMODEL}
+        ret.update({key: self.__dict__[key] for key in FBDiagram.METADATA})
+        return ret
 
     @staticmethod
     def load(data: dict) -> "FBDiagram":
         """Construct diagram object from data."""
-        return FBDiagram()
+        ret = FBDiagram()
+        ret.__dict__.update(data)
+        return ret
 
     def _get_next_id(self) -> str:
         """Generate a unique object identifier and update diagram state."""

@@ -17,7 +17,13 @@ class DiagramTests(unittest.TestCase):
 
     def test_dump_and_load(self):
         diagram = FBDiagram()
-        img = FBDiagram.load(diagram.dump())
+        func = FBDFunc("tstfunc", tuple(), tuple(), tuple())
+        uid1 = diagram.add_function(func)
+        img = FBDiagram.load(diagram.store())
+        uid2 = img.add_function(func)
+
+        # ensure that unique IDs persist across multiple instances of the same module
+        self.assertNotEqual(uid1, uid2)
 
         # ensure object equivalence, but not identity
         self.assertIsNot(diagram, img)
