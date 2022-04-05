@@ -2,8 +2,10 @@ Done:
     2022-04-04:
         - [??] basic data models for each element of the FBD hierarchy
         - [1] added hash and comparison via base object (FBDObj)
+    2022-04-05:
+        - [2.1] add_function now works
 
 Planned:
     [2] build up functions for manipulating the diagram object
-        [2.1] add a function object to the diagram
         [2.2] figure out a good way to connect inputs and outputs of functions
+        [2.3] integrate the connectivity matrix into hash function
