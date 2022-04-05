@@ -66,3 +66,9 @@ class FBDiagram(FBDObj):
         """Utility function - store the diagram as file."""
         with open(fname, "w", encoding="utf-8") as file:
             json.dump(self.dump(), file, indent=1)
+
+    @staticmethod
+    def from_file(fname: str) -> "FBDiagram":
+        """Utility function - load diagram from file."""
+        with open(fname, "r", encoding="utf-8") as file:
+            return FBDiagram.load(json.load(file))

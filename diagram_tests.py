@@ -58,5 +58,14 @@ class DiagramTests(unittest.TestCase):
         uid2 = diagram.add_function(func)
         self.assertNotEqual(uid1, uid2)
 
+    def test_save_and_load_from_file(self):
+        sch = FBDiagram()
+        var = FBDVar("tstvar", "dtype")
+        func = FBDFunc("tstfunc", (var,), (var,), (var,))
+        _ = sch.add_function(func)
+        sch.save("test_scheme.sch")
+        img = FBDiagram.from_file("test_scheme.sch")
+        self.assertEqual(sch, img)
+
 if __name__ == "__main__":
     unittest.main()
