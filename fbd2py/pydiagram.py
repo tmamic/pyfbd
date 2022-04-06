@@ -16,7 +16,11 @@ class PyDiagram(FBDiagram):
 
     def make_header(self, template: dict) -> str:
         """Fill in the file header."""
-        data = {'source': "spoof", "dt": str(datetime.now())}
+        data = {'source': "spoof",
+                'dt': datetime.now(),
+                'unique_fbs': len(self._unique_functions),
+                'nfbs': len(self.function_blocks),
+                'nconn': len(self.connections)}
         return code_template.fill_section(template['header'], data)
 
     def compile(self, fname: str) -> None:
