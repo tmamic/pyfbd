@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # test byproduct schemes
-test_scheme.sch
+test_scheme.json

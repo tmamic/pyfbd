@@ -68,8 +68,8 @@ class DiagramTests(unittest.TestCase):
         var = FBDVar("tstvar", "dtype")
         func = FBDFunc("tstfunc", (var,), (var,), (var,))
         _ = sch.add_function(func)
-        sch.save("test_scheme.sch")
-        img = FBDiagram.from_file("test_scheme.sch")
+        sch.save("test_scheme.json")
+        img = FBDiagram.from_file("test_scheme.json")
         self.assertEqual(sch, img)
 
 if __name__ == "__main__":
