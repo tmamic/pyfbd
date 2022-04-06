@@ -54,6 +54,14 @@ class DiagramTests(unittest.TestCase):
         _ = sch2.add_function(f2)
         self.assertNotEqual(sch1, sch2)
 
+        # check that modules are no longer equal if their connection matrices differ
+        sch_a = FBDiagram.from_file("simple_conn.json")
+        sch_b = FBDiagram.from_file("simple_conn.json")
+        self.assertEqual(sch_a, sch_b)
+
+        sch_b.add_connection("obj[0].not_tstvar", "obj[1].anothervar")
+        self.assertNotEqual(sch_a, sch_b)
+
     def test_uid(self):
         diagram = FBDiagram()
         func = FBDFunc("tstfunc", tuple(), tuple(), tuple())

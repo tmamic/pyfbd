@@ -1,0 +1,43 @@
+{
+ "connections": {
+  "obj[0].not_tstvar": "obj[1].tstvar"
+ },
+ "func_blocks": {
+  "obj[0]": {
+   "name": "tstfunc",
+   "inputs": [
+    {
+     "name": "tstvar",
+     "type": "dtype"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "not_tstvar",
+     "type": "dtype"
+    }
+   ],
+   "state": []
+  },
+  "obj[1]": {
+   "name": "tstfunc",
+   "inputs": [
+    {
+     "name": "tstvar",
+     "type": "dtype"
+    },
+    {
+     "name": "anothervar",
+     "type": "dtype"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "not_tstvar",
+     "type": "dtype"
+    }
+   ],
+   "state": []
+  }
+ }
+}
