@@ -23,4 +23,4 @@ def _process_tag(match) -> str:
 def fill_section(section: "list[str]", data: dict) -> str:
     """Parse the section lines for keys and fill them in with data."""
     ret = "\n".join(section)
-    return re.sub(TAG_REGEX, lambda tag: data[_process_tag(tag)], ret)
+    return re.sub(TAG_REGEX, lambda tag: str(data[_process_tag(tag)]), ret)
