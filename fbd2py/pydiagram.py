@@ -5,16 +5,25 @@
 @when:  2022-04-06
 """
 
+# built-in
+from datetime import datetime
+
 # internal
 from pyfbd.diagram import FBDiagram
+from pyfbd import code_template
 
 class PyDiagram(FBDiagram):
+
+    def make_header(self, template: dict) -> str:
+        """Fill in the file header."""
+        data = {'source': "spoof", "dt": str(datetime.now())}
+        return code_template.fill_section(template['header'], data)
 
     def compile(self, fname: str) -> None:
         """Converts the data content of this diagram into python code."""
         if not fname.endswith(".py"):
             fname += ".py"
 
-        content = ""
+        template = code_template.load_template("fbd2py/diagram_template.json")
         with open(fname, "w", encoding="utf-8") as outfile:
-            outfile.write(content)
+            outfile.write(self.make_header(template))
