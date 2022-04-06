@@ -1,0 +1,11 @@
+{
+    "header":
+    [
+        "'''",
+        "This is an FB diagram compiled by fbd2py.",
+        "---",
+        " source: <!source>",
+        "   date: <!dt>",
+        "'''"
+    ]
+}
