@@ -13,7 +13,7 @@ import re
 from pyfbd.fbdobj import FBDObj
 from pyfbd.function import FBDFunc
 
-VAR_REF_REGEX = re.compile(r"(.*?)\.(.*?)")
+VAR_REF_REGEX = re.compile(r"(.*)\.(.*)")
 def _parse_var_ref(ref: str) -> "tuple[str]":
     """Utility function. Parses <func>.<var> into separate tags."""
     res = re.findall(VAR_REF_REGEX, ref)
