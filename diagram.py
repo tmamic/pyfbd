@@ -44,14 +44,14 @@ class FBDiagram(FBDObj):
         ret.update({key: self.__dict__[key] for key in FBDiagram.METADATA})
         return ret
 
-    @staticmethod
-    def load(data: dict) -> "FBDiagram":
+    @classmethod
+    def load(cls, data: dict) -> "FBDiagram":
         """Construct diagram object from data."""
-        ret = FBDiagram()
-        for key in FBDiagram.DATAMODEL:
+        ret = cls()
+        for key in cls.DATAMODEL:
             # we are okay with keyerror here - datamodel must be complete
             ret.__dict__[key] = data[key]
-        for key in FBDiagram.METADATA:
+        for key in cls.METADATA:
             # we are fine with metadata missing
             if key in data:
                 ret.__dict__[key] = data[key]
@@ -94,8 +94,8 @@ class FBDiagram(FBDObj):
         with open(fname, "w", encoding="utf-8") as file:
             json.dump(self.dump(), file, indent=1)
 
-    @staticmethod
-    def from_file(fname: str) -> "FBDiagram":
+    @classmethod
+    def from_file(cls, fname: str) -> "FBDiagram":
         """Utility function - load diagram from file."""
         with open(fname, "r", encoding="utf-8") as file:
-            return FBDiagram.load(json.load(file))
+            return cls.load(json.load(file))
