@@ -18,8 +18,13 @@ class DiagramTests(unittest.TestCase):
 
     def test_dump_and_load(self):
         diagram = FBDiagram()
-        func = FBDFunc("tstfunc", tuple(), tuple(), tuple())
-        _ = diagram.add_function(func)
+        var1 = FBDVar("tstvar", "dtype")
+        var2 = FBDVar("not_tstvar", "dtype")
+        func1 = FBDFunc("tstfunc", (var1,), (var2,), tuple())
+        func2 = FBDFunc("tstfunc", (var1,), (var2,), tuple())
+        f1ref = diagram.add_function(func1)
+        f2ref = diagram.add_function(func2)
+        diagram.add_connection(f"{f1ref}.not_tstvar", f"{f2ref}.tstvar")
         img = FBDiagram.load(diagram.store())
 
         # ensure object equivalence, but not identity
@@ -32,8 +37,8 @@ class DiagramTests(unittest.TestCase):
         sch2 = FBDiagram()
         var1 = FBDVar("tstvar", "dtype")
         var2 = FBDVar("not tstvar", "dtype")
-        f1 = FBDFunc("tstf1", (var1,), tuple(), tuple())
-        f2 = FBDFunc("tstf1", (var2,), tuple(), tuple())
+        f1 = FBDFunc("tstf1", (var1,), (var2,), tuple())
+        f2 = FBDFunc("tstf1", (var2,), (var2,), tuple())
 
         _ = sch1.add_function(f1)
         _ = sch2.add_function(f1)
