@@ -23,7 +23,7 @@ def _parse_var_ref(ref: str) -> "tuple[str]":
 
 class FBDiagram(FBDObj):
     """Data model of an FBD containing multiple functions and their interconnections."""
-    DATAMODEL = tuple()
+    DATAMODEL = ("connections",)
     METADATA = ("_cid",)
 
     def __init__(self) -> None:
