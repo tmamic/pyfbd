@@ -9,4 +9,12 @@
 from pyfbd.diagram import FBDiagram
 
 class PyDiagram(FBDiagram):
-    pass
+
+    def compile(self, fname: str) -> None:
+        """Converts the data content of this diagram into python code."""
+        if not fname.endswith(".py"):
+            fname += ".py"
+
+        content = ""
+        with open(fname, "w", encoding="utf-8") as outfile:
+            outfile.write(content)
