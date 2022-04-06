@@ -9,3 +9,4 @@ Planned:
     [2] build up functions for manipulating the diagram object
         [2.2] figure out a good way to connect inputs and outputs of functions
         [2.3] integrate the connectivity matrix into hash function
+    [3] make the first compiler (fbd --> python 3)
