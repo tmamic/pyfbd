@@ -16,7 +16,6 @@ class Py2FBDTests(unittest.TestCase):
 
     def test_compile_simple_conn(self):
         sch = PyDiagram.from_file("simple_conn.json")
-        print(sch.__dict__)
         sch.compile("simple_conn")
 
 if __name__ == "__main__":
