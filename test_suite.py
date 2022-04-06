@@ -12,9 +12,5 @@ import unittest
 if __name__ != "__main__":
     raise Exception("Don't import me!")
 
-targets = glob.glob("*_tests.py")
-module_names = (name.split(".")[0] for name in targets)
-tests = (unittest.defaultTestLoader.loadTestsFromName(name) for name in module_names)
-suite = unittest.TestSuite(tests)
-runner = unittest.TextTestRunner()
-runner.run(suite)
+suite = unittest.TestLoader().discover('.', pattern = "*_tests.py")
+unittest.TextTestRunner(verbosity=2).run(suite)
