@@ -7,10 +7,19 @@
 
 # built-in
 import json
+import re
 
 # internal
 from pyfbd.fbdobj import FBDObj
 from pyfbd.function import FBDFunc
+
+VAR_REF_REGEX = re.compile(r"(.*?)\.(.*?)")
+def _parse_var_ref(ref: str) -> "tuple[str]":
+    """Utility function. Parses <func>.<var> into separate tags."""
+    res = re.findall(VAR_REF_REGEX, ref)
+    if len(res) == 1:
+        return res[0]
+    return ValueError(f"Could not parse reference {ref}.")
 
 class FBDiagram(FBDObj):
     """Data model of an FBD containing multiple functions and their interconnections."""
@@ -21,6 +30,7 @@ class FBDiagram(FBDObj):
         self._cid = 0
         self._unique_functions = set()
         self.function_blocks = {}
+        self.connections = {}
 
     def dump(self) -> dict:
         """Convert diagram data to dictionary."""
@@ -61,6 +71,23 @@ class FBDiagram(FBDObj):
         self.function_blocks[uid] = func
         self._unique_functions.add(func)
         return uid
+
+    def add_connection(self, src: str, dst: str) -> None:
+        """
+        Connect source (output) to destination (input).
+        Both are specified as <function uid>.<variable name>.
+        """
+        srcf, srcv = _parse_var_ref(src)
+        dstf, dstv = _parse_var_ref(dst)
+
+        # following lines will cause errors if reference is invalid
+        srcf_ref = self.function_blocks[srcf]
+        dstf_ref = self.function_blocks[dstf]
+        _ = srcf_ref.get_output_var(srcv)
+        _ = dstf_ref.get_input_var(dstv)
+
+        # if both references are valid, create a link
+        self.connections[src] = dst
 
     def save(self, fname: str) -> None:
         """Utility function - store the diagram as file."""
