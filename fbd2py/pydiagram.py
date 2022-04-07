@@ -10,6 +10,7 @@ from datetime import datetime
 
 # internal
 from pyfbd.diagram import FBDiagram
+from pyfbd.fbd2py.pyfunc import PyFunc
 from pyfbd import code_template
 
 class PyDiagram(FBDiagram):
@@ -28,6 +29,10 @@ class PyDiagram(FBDiagram):
         """Fill in the class content."""
         data = {'source': "spoof"}
         lines = code_template.fill_section(template['class_header'], data)
+        for item in self._unique_functions:
+            func = PyFunc.load(item.dump())
+            for line in func.compile():
+                lines.append("    " + line)
         return "\n".join(lines)
 
     def compile(self, fname: str) -> None:

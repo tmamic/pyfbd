@@ -9,4 +9,9 @@
 from pyfbd.function import FBDFunc
 
 class PyFunc(FBDFunc):
-    pass
+
+    def compile(self) -> str:
+        """Converts the data content of this function into python code."""
+        lines = [f"def {self.name}():",
+                 "    pass"]
+        return lines
