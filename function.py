@@ -48,10 +48,10 @@ class FBDFunc(FBDObj):
         ret['state'] = [sta.dump() for _, sta in self.state.items()]
         return ret
 
-    @staticmethod
-    def load(data: dict) -> "FBDFunc":
+    @classmethod
+    def load(cls, data: dict) -> "FBDFunc":
         """Construct a class from data content."""
         inputs = tuple(FBDVar.load(inp) for inp in data['inputs'])
         outputs = tuple(FBDVar.load(out) for out in data['outputs'])
         state = tuple(FBDVar.load(sta) for sta in data['state'])
-        return FBDFunc(data['name'], inputs, outputs, state)
+        return cls(data['name'], inputs, outputs, state)
