@@ -15,6 +15,6 @@
     "class_header":
     [
         "class FBD<!source>:",
-        "    pass"
+        "    '''Data model of diagram '<!source>'.'''"
     ]
 }
