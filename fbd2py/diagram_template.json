@@ -11,5 +11,10 @@
         " connections: <!nconn>",
         "-----------------------------------------",
         "'''"
+    ],
+    "class_header":
+    [
+        "class FBD<!source>:",
+        "    pass"
     ]
 }

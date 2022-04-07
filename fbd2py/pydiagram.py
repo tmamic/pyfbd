@@ -21,7 +21,14 @@ class PyDiagram(FBDiagram):
                 'unique_fbs': len(self._unique_functions),
                 'nfbs': len(self.function_blocks),
                 'nconn': len(self.connections)}
-        return code_template.fill_section(template['header'], data)
+        lines = code_template.fill_section(template['header'], data)
+        return "\n".join(lines)
+
+    def make_class(self, template: dict) -> str:
+        """Fill in the class content."""
+        data = {'source': "spoof"}
+        lines = code_template.fill_section(template['class_header'], data)
+        return "\n".join(lines)
 
     def compile(self, fname: str) -> None:
         """Converts the data content of this diagram into python code."""
@@ -31,3 +38,5 @@ class PyDiagram(FBDiagram):
         template = code_template.load_template("fbd2py/diagram_template.json")
         with open(fname, "w", encoding="utf-8") as outfile:
             outfile.write(self.make_header(template))
+            outfile.write("\n\n")
+            outfile.write(self.make_class(template))
