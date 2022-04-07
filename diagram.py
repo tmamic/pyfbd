@@ -56,7 +56,9 @@ class FBDiagram(FBDObj):
             if key in data:
                 ret.__dict__[key] = data[key]
         for uid, fdump in data['func_blocks'].items():
-            ret.function_blocks[uid] = FBDFunc.load(fdump)
+            func = FBDFunc.load(fdump)
+            ret.function_blocks[uid] = func
+            ret._unique_functions.add(func)
         return ret
 
     def _get_next_id(self) -> str:
