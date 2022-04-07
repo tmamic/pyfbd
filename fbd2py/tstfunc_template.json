@@ -1,0 +1,10 @@
+{
+    "docstring":
+    [
+        "'''This is a test function. It does nothing useful.'''"
+    ],
+    "body":
+    [
+        "pass"
+    ]
+}
