@@ -15,3 +15,4 @@ Planned:
         [3.3] make the state of each FB instance a class variable
         [3.4] compile a "step" function for the entire diagram
             - this is where we run into cycle detection and order of execution problems
+        [3.5] come up with a better way to compile code (maybe output sections?)
