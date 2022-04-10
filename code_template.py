@@ -86,13 +86,28 @@ def load_template(fname: str) -> Template:
     ret = Template(fname, sections)
     return ret
 
+def _match_finder(source: dict):
+    """Generator for regex matching functions which replace keys by values of source."""
+    def ret(match: re.Match) -> str:
+        key = match.group(1)
+        if key in source:
+            _dbgprint(f"[DBG] Key '{key}' hit.")
+            return str(source[key])
+        return match.group(0)
+    return ret
+
 def fill_section(sect: Section, data: dict) -> bool:
     """Replace section tags with values of related keys in data. Return True if section is complete."""
     vars = set(re.findall(VAR_REGEX, sect.content))
     keys = set(data.keys())
     rem = vars.difference(keys)
     unused = keys.difference(vars)
+    match_func = _match_finder(data)
+    sect.content = re.sub(VAR_REGEX, match_func, sect.content)
     if unused:
         _dbgprint(f"[DBG] Unused keys: {unused}.")
     if rem:
         _dbgprint(f"[DBG] Remaining keys: {rem}.")
+    else:
+        _dbgprint(f"[DBG] Section {sect.name} complete.")
+    return bool(rem)
