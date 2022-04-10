@@ -34,4 +34,11 @@ class PyDiagram(FBDiagram):
             print(f"{sect.name}:\n---\n{sect.content}")
 
         with open(fname, "w", encoding="utf-8") as outfile:
-            return
+            for sect in template.sections:
+                filler = "." * (50 - len(sect.name))
+                print(f"[INFO] Writing {sect.name}{filler}", end="")
+                if sect.complete:
+                    outfile.write(sect.content)
+                    print(f" OK")
+                else:
+                    print(f" INCOMPLETE")

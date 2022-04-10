@@ -28,12 +28,23 @@ class Section:
     properties: dict
     content: str
     subsections: "list[Section]"
+    complete = False
+
+    def is_complete(self) -> bool:
+        """Return True if complete and all subsections are complete."""
+        if not self.subsections:
+            return self.complete
+        return self.complete and all((sect.is_complete() for sect in self.subsections))
 
 @dataclass
 class Template:
     """Keep track of template attributes."""
     fname: str
     sections: "list[Section]"
+
+    def is_complete(self) -> bool:
+        """Return True if all sections are complete."""
+        return all((sect.is_complete() for sect in self.sections))
 
 def _parse_sect_header(segments: tuple) -> Section:
     """Create an incomplete section object with header data filled in."""
@@ -61,6 +72,7 @@ def _get_section_desc(line: str) -> Section:
 def load_template(fname: str) -> Template:
     """Parses a template from .fbdt file."""
     sections = []
+    active_stack = sections
     segstack = []
     last_sect = None
     with open(fname, "r", encoding="utf-8") as infile:
@@ -69,7 +81,8 @@ def load_template(fname: str) -> Template:
             sect_end = re.search(SECT_END_REGEX, line)
             if sect:
                 _dbgprint(f"[DBG] Entering section {sect.name} ({sect.type}).")
-                sections.append(sect)
+                active_stack.append(sect)
+                active_stack = sect.subsections
                 if segstack:
                     # mark the subsection header location within containing section
                     segstack[-1].content += f"<!{sect.name}>"
@@ -77,6 +90,10 @@ def load_template(fname: str) -> Template:
                 segstack.append(sect)
             elif sect_end:
                 last_sect = segstack.pop()
+                if segstack:
+                    active_stack = segstack[-1].subsections
+                else:
+                    active_stack = sections
                 _dbgprint(f"[DBG] Leaving section {last_sect.name} ({last_sect.type}).")
             elif segstack:
                 segstack[-1].content += line
@@ -110,4 +127,5 @@ def fill_section(sect: Section, data: dict) -> bool:
         _dbgprint(f"[DBG] Remaining keys: {rem}.")
     else:
         _dbgprint(f"[DBG] Section {sect.name} complete.")
+        sect.complete = True
     return bool(rem)
