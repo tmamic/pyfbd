@@ -3,6 +3,8 @@
 This is an FB diagram compiled by fbd2py.
 -----------------------------------------
       source: <!source>
+    template: <!diagtemplate>
+   schematic: <!schname>
         date: <!dt>
   unique fbs: <!unique_fbs>
 fb instances: <!nfbs>
@@ -12,7 +14,7 @@ fb instances: <!nfbs>
 <#end>
 
 <#out:class_def>
-class FBD<!source>:
+class FBD<!schname>:
     '''Data model of diagram '<!source>'.'''
     def __init__(self, inputs, outputs, state):
         <#in:state_def, indent=8>

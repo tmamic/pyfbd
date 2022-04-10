@@ -21,5 +21,17 @@ class PyDiagram(FBDiagram):
             fname += ".py"
 
         template = code_template.load_template("fbd2py/diagram.fbdt")
+        global_data = {'source': fname,
+                       'diagtemplate': template.fname,
+                       'schname': self.schname if hasattr(self, "schname") else "unnamed",
+                       'dt': datetime.now(),
+                       'unique_fbs': len(self._unique_functions),
+                       'nfbs': len(self.function_blocks),
+                       'nconn': len(self.connections)}
+
+        for sect in template.sections:
+            code_template.fill_section(sect, global_data)
+            print(f"{sect.name}:\n---\n{sect.content}")
+
         with open(fname, "w", encoding="utf-8") as outfile:
             return
