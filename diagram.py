@@ -24,7 +24,7 @@ def _parse_var_ref(ref: str) -> "tuple[str]":
 class FBDiagram(FBDObj):
     """Data model of an FBD containing multiple functions and their interconnections."""
     DATAMODEL = ("connections",)
-    METADATA = ("_cid",)
+    METADATA = ("_cid", "schname")
 
     def __init__(self) -> None:
         self._cid = 0
@@ -41,7 +41,9 @@ class FBDiagram(FBDObj):
     def store(self) -> dict:
         """Store object with added metadata to dictionary. Prefered when saving state of instance."""
         ret = self.dump()
-        ret.update({key: self.__dict__[key] for key in FBDiagram.METADATA})
+        for key in FBDiagram.METADATA:
+            if key in self.__dict__:
+                ret.update({key: self.__dict__[key]})
         return ret
 
     @classmethod
