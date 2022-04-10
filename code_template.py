@@ -9,6 +9,17 @@
 import re
 from dataclasses import dataclass
 
+SECTION_REGEX = re.compile(r"<#(.*?):(.*)>")
+SECT_END_REGEX = re.compile(r"<#end>")
+VAR_REGEX = re.compile(r"<!(.*)>")
+
+_debug = True
+
+def _dbgprint(*pos, **kvpairs):
+    """Debug print function."""
+    if _debug:
+        print(*pos, **kvpairs)
+
 @dataclass
 class Section:
     """Keep track of section attributes."""
@@ -16,52 +27,72 @@ class Section:
     type: str
     properties: dict
     content: str
+    subsections: "list[Section]"
 
-SECTION_REGEX = re.compile(r"<#(.*?):(.*)>")
+@dataclass
+class Template:
+    """Keep track of template attributes."""
+    fname: str
+    sections: "list[Section]"
 
-def get_args(argstr: str) -> dict:
-    """Parse a string of comma-separated arguments into key-value pairs."""
-    ret = {}
-    for pair in argstr.split(","):
-        try:
-            key, val = pair.split("=")
-        except ValueError:
-            key, val = pair, ""
-        ret[key.strip()] = val.strip()
-    return ret
-
-def parse_section(sect: tuple) -> Section:
-    """Parse section attributes."""
-    stype, argstr = sect
-    args = argstr.split(",")
-    sname = args.pop(0).strip()
+def _parse_sect_header(segments: tuple) -> Section:
+    """Create an incomplete section object with header data filled in."""
+    # segments always have 2 items due to regex match form
+    stype = segments[0]
+    args = segments[1].split(",")
+    if not args:
+        raise ValueError("Missing section name.")
+    sname = args[0]
     props = {}
-    while args:
-        pair = args.pop(0)
-        key, val = pair.split("=")
+    for prop in args[1:]:
+        key, val = prop.split("=")
         props[key.strip()] = val.strip()
-    return Section(sname, stype, props, "")
+    return Section(sname, stype, props, "", [])
 
-def iter_sections(text: str):
-    """Iteratively returns section objects from a file segment."""
-    for sect in re.findall(SECTION_REGEX, text):
-        yield parse_section(sect)
+def _get_section_desc(line: str) -> Section:
+    """Check if line contains valid section header and return section object if yes."""
+    header = re.findall(SECTION_REGEX, line)
+    if len(header) == 1:
+        return _parse_sect_header(header[0])
+    elif len(header) > 1:
+        raise ValueError("Multiple header definitions in single line are not allowed.")
+    # returning None signals that line contains no header
 
-def load_template(fname: str) -> dict:
-    """Load a code template."""
-    ret = {'fname': fname, 'sections': []}
-    with open(fname, "r", encoding="utf-8") as template:
-        for sect in iter_sections(template.read()):
-            ret['sections'].append(sect)
-    print(ret)
+def load_template(fname: str) -> Template:
+    """Parses a template from .fbdt file."""
+    sections = []
+    segstack = []
+    last_sect = None
+    with open(fname, "r", encoding="utf-8") as infile:
+        for line in infile.readlines():
+            sect = _get_section_desc(line)
+            sect_end = re.search(SECT_END_REGEX, line)
+            if sect:
+                _dbgprint(f"[DBG] Entering section {sect.name} ({sect.type}).")
+                sections.append(sect)
+                if segstack:
+                    # mark the subsection header location within containing section
+                    segstack[-1].content += f"<!{sect.name}>"
+                    segstack[-1].subsections.append(sect)
+                segstack.append(sect)
+            elif sect_end:
+                last_sect = segstack.pop()
+                _dbgprint(f"[DBG] Leaving section {last_sect.name} ({last_sect.type}).")
+            elif segstack:
+                segstack[-1].content += line
+    if segstack:
+        raise ValueError(f"Damaged sections: {[sc.name for sc in segstack]}. Last: {last_sect}.")
+
+    ret = Template(fname, sections)
     return ret
 
-TAG_REGEX = re.compile(r"<!(.*)>")
-def _process_tag(match) -> str:
-    """Utility function - convert regex match to tag string."""
-    # group(1) is the first subgroup in TAG_REGEX, 0 is the entire match
-    return match.group(1)
-
-def fill_section(section: "list[str]", data: dict) -> str:
-    """Parse the section for keys and fill them in with data."""
-    return [re.sub(TAG_REGEX, lambda tag: str(data[_process_tag(tag)]), line) for line in section]
+def fill_section(sect: Section, data: dict) -> bool:
+    """Replace section tags with values of related keys in data. Return True if section is complete."""
+    vars = set(re.findall(VAR_REGEX, sect.content))
+    keys = set(data.keys())
+    rem = vars.difference(keys)
+    unused = keys.difference(vars)
+    if unused:
+        _dbgprint(f"[DBG] Unused keys: {unused}.")
+    if rem:
+        _dbgprint(f"[DBG] Remaining keys: {rem}.")

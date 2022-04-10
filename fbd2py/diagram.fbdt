@@ -1,4 +1,4 @@
-<#out_sect:header>
+<#out:header>
 """
 This is an FB diagram compiled by fbd2py.
 -----------------------------------------
@@ -9,14 +9,19 @@ fb instances: <!nfbs>
  connections: <!nconn>
 -----------------------------------------
 """
+<#end>
 
-<#out_sect:class_def>
+<#out:class_def>
 class FBD<!source>:
     '''Data model of diagram '<!source>'.'''
     def __init__(self, inputs, outputs, state):
-        <#in_sect:state_def, indent=8>
+        <#in:state_def, indent=8>
+        <#end>
 
-    <#in_sect:func_def, indent=4>
+    <#in:func_def, indent=4>
+    <#end>
 
     def step(self, inputs, outputs):
-        <#in_sect:step_func, indent=8>
+        <#in:step_func, indent=8>
+        <#end>
+<#end>
