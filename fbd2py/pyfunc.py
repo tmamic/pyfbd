@@ -11,10 +11,15 @@ from pyfbd import code_template
 
 class PyFunc(FBDFunc):
 
-    def get_template(self) -> dict:
+    def get_template(self) -> code_template.Template:
         """Load function implementation template from file."""
-        template_name = f"fbd2py/{self.name}_template.json"
+        template_name = f"fbd2py/{self.name}_template.fbdt"
         return code_template.load_template(template_name)
 
-    def compile(self) -> str:
+    def compile_sections(self) -> dict:
         """Converts the data content of this function into python code."""
+        template = self.get_template()
+        print(template)
+        return {'state_def': f"{self.name}.state",
+                'func_def': f"{self.name}.funcdef",
+                'step_func': f"{self.name}.step"}
