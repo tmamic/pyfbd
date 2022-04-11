@@ -36,6 +36,22 @@ class Section:
             return self.complete
         return self.complete and all((sect.is_complete() for sect in self.subsections))
 
+    def get_section_by_name(self, name: str) -> "Section":
+        """Recursively look for section with given name."""
+        if self.name == name:
+            return self
+        for sect in self.subsections:
+            got = sect.get_section_by_name(name)
+            if got:
+                return got
+
+    def yield_sections_of_type(self, stype: str):
+        """Iterate over all contained sections with the given type."""
+        if self.type == stype:
+            yield self
+        for sect in self.subsections:
+            yield sect.yield_sections_of_type(stype)
+
 @dataclass
 class Template:
     """Keep track of template attributes."""
@@ -45,6 +61,20 @@ class Template:
     def is_complete(self) -> bool:
         """Return True if all sections are complete."""
         return all((sect.is_complete() for sect in self.sections))
+
+    def get_section_by_name(self, name: str) -> Section:
+        """Return section referenced by its name."""
+        for sect in self.sections:
+            got = sect.get_section_by_name(name)
+            if got:
+                return got
+
+    def iter_sections_by_type(self, stype: str):
+        """Iterate over all sections with given type."""
+        for sect in self.sections:
+            for outgen in sect.yield_sections_of_type(stype):
+                for obj in outgen:
+                    yield obj
 
 def _parse_sect_header(segments: tuple) -> Section:
     """Create an incomplete section object with header data filled in."""
