@@ -7,6 +7,10 @@ Done:
     2022-04-06:
         - [2.2] relatively naive interconnect created
         - [2.3] connectivity matrix is hashable out of the box
+    2022-04-10:
+        - [3.1] redone a lot of the compile process
+    2022-04-12_
+        - [3.2] done some function compiling
 
 Planned:
     [3] make the first compiler (fbd --> python 3)
