@@ -52,6 +52,8 @@ class PyDiagram(FBDiagram):
         for sect, content in input_sections.items():
             if not content:
                 print(f"[INFO] Section {sect} empty.")
+                ref_sect = template.get_section_by_name(sect)
+                input_sections[sect] = ref_sect.content
         for sect in template.sections:
             code_template.fill_section(sect, input_sections)
 
