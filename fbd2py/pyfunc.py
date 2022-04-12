@@ -19,7 +19,8 @@ class PyFunc(FBDFunc):
     def compile_sections(self) -> dict:
         """Converts the data content of this function into python code."""
         template = self.get_template()
-        print(template)
-        return {'state_def': f"{self.name}.state",
-                'func_def': f"{self.name}.funcdef",
-                'step_func': f"{self.name}.step"}
+        func_data = {'name': self.name}
+        for sect in template.sections:
+            code_template.fill_section(sect, func_data)
+
+        return {sect.name: sect.content for sect in template.sections}

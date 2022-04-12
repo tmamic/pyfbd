@@ -1,0 +1,22 @@
+This is a test function template. It does nothing useful.
+
+<#out:type_defs>
+@dataclass
+class TestData_<!name>:
+    A: int
+    B: int
+    C: float
+
+<#end>
+
+<#out:func_def>
+def fn_<!name>(self, data: TestData_<!name>) -> int:
+    """This is the implementation of test function '<!name>'."""
+    ret = data.A + data.B
+    return int(ret * data.C)
+
+<#end>
+
+<#out:func_call>
+<!output> = fn_<!name>(<!input>)
+<#end>
