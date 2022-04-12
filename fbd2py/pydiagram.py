@@ -31,7 +31,6 @@ class PyDiagram(FBDiagram):
 
         for sect in template.sections:
             code_template.fill_section(sect, global_data)
-            print(f"{sect.name}:\n---\n{sect.content}")
 
         input_sections = {sect.name: "" for sect in template.iter_sections_by_type("in")}
         for func in self._unique_functions:
@@ -40,6 +39,9 @@ class PyDiagram(FBDiagram):
             print(f"[INFO] Compiling outputs for {func.name}.")
             for sect_name, content in function_outs.items():
                 section = template.get_section_by_name(sect_name)
+                if not section:
+                    print(f"[WARN] Function '{func.name}' outputs unexpected section '{sect_name}'.")
+                    continue
                 indent = 0
                 if 'indent' in section.properties:
                     indent = int(section.properties['indent'])
