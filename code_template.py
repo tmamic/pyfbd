@@ -9,9 +9,9 @@
 import re
 from dataclasses import dataclass
 
-SECTION_REGEX = re.compile(r"<#(.*?):(.*)>")
+SECTION_REGEX = re.compile(r"<#(.*?):(.*?)>")
 SECT_END_REGEX = re.compile(r"<#end>")
-VAR_REGEX = re.compile(r"<!(.*)>")
+VAR_REGEX = re.compile(r"<!(.*?)>")
 
 _debug = True
 
