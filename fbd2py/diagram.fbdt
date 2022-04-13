@@ -11,6 +11,9 @@ fb instances: <!nfbs>
  connections: <!nconn>
 -----------------------------------------
 """
+
+from dataclasses import dataclass
+
 <#end>
 
 <#out:preamble>
@@ -21,7 +24,7 @@ fb instances: <!nfbs>
 <#out:class_def>
 class FBD<!schname>:
     '''Data model of diagram '<!source>'.'''
-    def __init__(self, inputs, outputs, state):
+    def __init__(self):
         <#in:state_def, indent=8>
         pass
         <#end>
@@ -29,7 +32,7 @@ class FBD<!schname>:
     <#in:func_def, indent=4>
     <#end>
 
-    def step(self, inputs, outputs):
+    def step(self):
         <#in:func_call, indent=8>
         <#end>
 <#end>
