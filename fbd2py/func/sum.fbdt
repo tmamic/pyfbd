@@ -1,0 +1,17 @@
+"""
+@what:  Vectorized sum of inputs.
+@why:   Support for simple FBD summation functions with any number of inputs.
+@who:   TM
+@when:  2022-04-13
+"""
+
+<#out:func_def>
+def fn_<!name>(self, inputvector):
+    """Returns the sum of all elements of input vector."""
+    return sum(inputvector)
+
+<#end>
+
+<#out:func_call>
+<!output> = fn_<!name>(<!inv>)
+<#end>
