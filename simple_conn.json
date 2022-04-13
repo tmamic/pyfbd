@@ -4,36 +4,40 @@
  },
  "func_blocks": {
   "obj[0]": {
-   "name": "tstfunc",
+   "name": "sum",
    "inputs": [
     {
-     "name": "tstvar",
+     "name": "A",
+     "type": "dtype"
+    },
+    {
+     "name": "B",
      "type": "dtype"
     }
    ],
    "outputs": [
     {
-     "name": "not_tstvar",
+     "name": "X",
      "type": "dtype"
     }
    ],
    "state": []
   },
   "obj[1]": {
-   "name": "tstfunc",
+   "name": "sum",
    "inputs": [
     {
-     "name": "tstvar",
+     "name": "U",
      "type": "dtype"
     },
     {
-     "name": "anothervar",
+     "name": "C",
      "type": "dtype"
     }
    ],
    "outputs": [
     {
-     "name": "not_tstvar",
+     "name": "Y",
      "type": "dtype"
     }
    ],
