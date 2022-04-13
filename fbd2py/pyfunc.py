@@ -13,7 +13,7 @@ class PyFunc(FBDFunc):
 
     def get_template(self) -> code_template.Template:
         """Load function implementation template from file."""
-        template_name = f"fbd2py/{self.name}_template.fbdt"
+        template_name = f"fbd2py/func/{self.name}.fbdt"
         return code_template.load_template(template_name)
 
     def compile_sections(self) -> dict:
