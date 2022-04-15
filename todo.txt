@@ -9,8 +9,13 @@ Done:
         - [2.3] connectivity matrix is hashable out of the box
     2022-04-10:
         - [3.1] redone a lot of the compile process
-    2022-04-12_
+    2022-04-12:
         - [3.2] done some function compiling
+    2022-04-15:
+        - realized that content stored as fbd diagram is too verbose:
+            there is no need to store interface data for each function block!
+            storing interface of each unique function once is enough, the rest
+            is encoded in the connection matrix
 
 Planned:
     [3] make the first compiler (fbd --> python 3)
@@ -19,4 +24,4 @@ Planned:
         [3.3] make the state of each FB instance a class variable
         [3.4] compile a "step" function for the entire diagram
             - this is where we run into cycle detection and order of execution problems
-        [3.5] come up with a better way to compile code (maybe output sections?)
+    [4] rework way diagram data content, split function interfaces from instances
