@@ -156,6 +156,6 @@ def fill_section(sect: Section, data: dict) -> bool:
     if rem:
         _dbgprint(f"[DBG] Remaining keys: {rem}.")
     else:
-        _dbgprint(f"[DBG] Section {sect.name} complete.")
+        _dbgprint(f"[INFO] Section {sect.name} complete.")
         sect.complete = True
     return bool(rem)
