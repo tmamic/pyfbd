@@ -12,6 +12,7 @@ from dataclasses import dataclass
 SECTION_REGEX = re.compile(r"<#(.*?):(.*?)>")
 SECT_END_REGEX = re.compile(r"<#end>")
 VAR_REGEX = re.compile(r"<!(.*?)>")
+PROPERTY_REGEX = re.compile(r"<\?(.*?)=(.*?)>")
 
 _debug = True
 
@@ -57,6 +58,7 @@ class Template:
     """Keep track of template attributes."""
     fname: str
     sections: "list[Section]"
+    properties: "list[tuple]"
 
     def is_complete(self) -> bool:
         """Return True if all sections are complete."""
@@ -102,11 +104,13 @@ def _get_section_desc(line: str) -> Section:
 def load_template(fname: str) -> Template:
     """Parses a template from .fbdt file."""
     sections = []
+    props = []
     active_stack = sections
     segstack = []
     last_sect = None
     with open(fname, "r", encoding="utf-8") as infile:
         for line in infile.readlines():
+            prop = re.findall(PROPERTY_REGEX, line)
             sect = _get_section_desc(line)
             sect_end = re.search(SECT_END_REGEX, line)
             if sect:
@@ -130,7 +134,7 @@ def load_template(fname: str) -> Template:
     if segstack:
         raise ValueError(f"Damaged sections: {[sc.name for sc in segstack]}. Last: {last_sect}.")
 
-    ret = Template(fname, sections)
+    ret = Template(fname, sections, props)
     return ret
 
 def _match_finder(source: dict):
