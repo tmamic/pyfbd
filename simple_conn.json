@@ -1,6 +1,6 @@
 {
  "connections": {
-  "obj[0].not_tstvar": "obj[1].tstvar"
+  "obj[0].X": "obj[1].A"
  },
  "func_blocks": {
   "obj[0]": {
@@ -27,17 +27,17 @@
    "name": "sum",
    "inputs": [
     {
-     "name": "U",
+     "name": "A",
      "type": "dtype"
     },
     {
-     "name": "C",
+     "name": "B",
      "type": "dtype"
     }
    ],
    "outputs": [
     {
-     "name": "Y",
+     "name": "X",
      "type": "dtype"
     }
    ],
