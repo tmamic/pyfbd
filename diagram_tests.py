@@ -59,7 +59,7 @@ class DiagramTests(unittest.TestCase):
         sch_b = FBDiagram.from_file("simple_conn.json")
         self.assertEqual(sch_a, sch_b)
 
-        sch_b.add_connection("obj[0].not_tstvar", "obj[1].anothervar")
+        sch_b.add_connection("obj[1].X", "obj[0].A")
         self.assertNotEqual(sch_a, sch_b)
 
     def test_uid(self):
