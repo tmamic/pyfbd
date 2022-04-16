@@ -33,7 +33,7 @@ class PyDiagram(FBDiagram):
             code_template.fill_section(sect, global_data)
 
         input_sections = {sect.name: "" for sect in template.iter_sections_by_type("in")}
-        for func in self._unique_functions:
+        for _, func in self._unique_functions.items():
             pyfunc_obj = PyFunc.load(func.dump())
             function_outs = pyfunc_obj.compile_sections()
             print(f"[INFO] Compiling outputs for {func.name}.")
