@@ -2,28 +2,8 @@
  "connections": {
   "obj[0].X": "obj[1].A"
  },
- "func_blocks": {
-  "obj[0]": {
-   "name": "sum",
-   "inputs": [
-    {
-     "name": "A",
-     "type": "dtype"
-    },
-    {
-     "name": "B",
-     "type": "dtype"
-    }
-   ],
-   "outputs": [
-    {
-     "name": "X",
-     "type": "dtype"
-    }
-   ],
-   "state": []
-  },
-  "obj[1]": {
+ "func_ifaces": {
+  "sum": {
    "name": "sum",
    "inputs": [
     {
@@ -43,6 +23,10 @@
    ],
    "state": []
   }
+ },
+ "func_blocks": {
+     "obj[0]": "sum",
+     "obj[1]": "sum"
  },
  "schname": "SimpleConn"
 }

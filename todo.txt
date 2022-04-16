@@ -16,6 +16,8 @@ Done:
             there is no need to store interface data for each function block!
             storing interface of each unique function once is enough, the rest
             is encoded in the connection matrix
+    2022-04-16:
+        - [4] rearranged diagram data to store only unique function interfaces
 
 Planned:
     [3] make the first compiler (fbd --> python 3)
@@ -24,4 +26,3 @@ Planned:
         [3.3] make the state of each FB instance a class variable
         [3.4] compile a "step" function for the entire diagram
             - this is where we run into cycle detection and order of execution problems
-    [4] rework way diagram data content, split function interfaces from instances

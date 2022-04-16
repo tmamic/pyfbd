@@ -28,14 +28,15 @@ class FBDiagram(FBDObj):
 
     def __init__(self) -> None:
         self._cid = 0
-        self._unique_functions = set()
+        self._unique_functions = {}
         self.function_blocks = {}
         self.connections = {}
 
     def dump(self) -> dict:
         """Convert diagram data to dictionary."""
         ret = {key: self.__dict__[key] for key in FBDiagram.DATAMODEL}
-        ret['func_blocks'] = {uid: func.dump() for uid, func in self.function_blocks.items()}
+        ret['func_ifaces'] = {name: func.dump() for name, func in self._unique_functions.items()}
+        ret['func_blocks'] = {uid: fname for uid, fname in self.function_blocks.items()}
         return ret
 
     def store(self) -> dict:
@@ -57,10 +58,11 @@ class FBDiagram(FBDObj):
             # we are fine with metadata missing
             if key in data:
                 ret.__dict__[key] = data[key]
-        for uid, fdump in data['func_blocks'].items():
+        for name, fdump in data['func_ifaces'].items():
             func = FBDFunc.load(fdump)
-            ret.function_blocks[uid] = func
-            ret._unique_functions.add(func)
+            ret._unique_functions[name] = func
+        for uid, fname in data['func_blocks'].items():
+            ret.function_blocks[uid] = fname
         return ret
 
     def _get_next_id(self) -> str:
@@ -72,8 +74,8 @@ class FBDiagram(FBDObj):
     def add_function(self, func: FBDFunc) -> str:
         """Adds a function to this diagram."""
         uid = self._get_next_id()
-        self.function_blocks[uid] = func
-        self._unique_functions.add(func)
+        self.function_blocks[uid] = func.name
+        self._unique_functions[func.name] = func
         return uid
 
     def add_connection(self, src: str, dst: str) -> None:
@@ -85,8 +87,10 @@ class FBDiagram(FBDObj):
         dstf, dstv = _parse_var_ref(dst)
 
         # following lines will cause errors if reference is invalid
-        srcf_ref = self.function_blocks[srcf]
-        dstf_ref = self.function_blocks[dstf]
+        srcf_uid = self.function_blocks[srcf]
+        dstf_uid = self.function_blocks[dstf]
+        srcf_ref = self._unique_functions[srcf_uid]
+        dstf_ref = self._unique_functions[dstf_uid]
         _ = srcf_ref.get_output_var(srcv)
         _ = dstf_ref.get_input_var(dstv)
 
