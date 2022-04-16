@@ -110,7 +110,7 @@ def load_template(fname: str) -> Template:
     last_sect = None
     with open(fname, "r", encoding="utf-8") as infile:
         for line in infile.readlines():
-            prop = re.findall(PROPERTY_REGEX, line)
+            props += re.findall(PROPERTY_REGEX, line)
             sect = _get_section_desc(line)
             sect_end = re.search(SECT_END_REGEX, line)
             if sect:
