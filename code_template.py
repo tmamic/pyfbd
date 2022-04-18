@@ -14,7 +14,7 @@ SECT_END_REGEX = re.compile(r"<#end>")
 VAR_REGEX = re.compile(r"<!(.*?)>")
 PROPERTY_REGEX = re.compile(r"<\?(.*?)=(.*?)>")
 
-_debug = True
+_debug = False
 
 def _dbgprint(*pos, **kvpairs):
     """Debug print function."""
