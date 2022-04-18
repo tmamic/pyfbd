@@ -34,5 +34,6 @@ class FBD<!schname>:
 
     def step(self):
         <#in:func_call, indent=8>
+        pass
         <#end>
 <#end>
