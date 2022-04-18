@@ -1,0 +1,31 @@
+"""
+@what:  Accumulator function.
+@why:   Support for simple FBD integration.
+@who:   TM
+@when:  2022-04-18
+"""
+<?input=IN>
+<?state=ACC>
+
+<#out:type_defs>
+@dataclass
+class <!name>State:
+    ACC: int
+
+<#end>
+
+<#out:state_def>
+    <!uid>_state = <!name>State(ACC=0)
+<#end>
+
+<#out:func_def>
+def fn_<!name>(self, IN, state: <!name>State):
+    """Adds the input to internal accumulator and returns its current value."""
+    state.ACC += IN
+    return state.ACC
+
+<#end>
+
+<#out:func_call>
+<!output> = fn_<!name>(<!inv>)
+<#end>

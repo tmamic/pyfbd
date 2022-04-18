@@ -1,6 +1,7 @@
 {
  "connections": {
-  "obj[0].X": "obj[1].A"
+  "obj[0].X": "obj[1].A",
+  "obj[1].X": "obj[2].IN"
  },
  "func_ifaces": {
   "sum": {
@@ -22,11 +23,33 @@
     }
    ],
    "state": []
-  }
+  },
+  "acc": {
+    "name": "acc",
+    "inputs": [
+     {
+      "name": "IN",
+      "type": "dtype"
+     }
+    ],
+    "outputs": [
+     {
+      "name": "OUT",
+      "type": "dtype"
+     }
+    ],
+    "state": [
+     {
+      "name": "ACC",
+      "type": "dtype"
+     }
+    ]
+   }
  },
  "func_blocks": {
      "obj[0]": "sum",
-     "obj[1]": "sum"
+     "obj[1]": "sum",
+     "obj[2]": "acc"
  },
  "schname": "SimpleConn"
 }

@@ -18,11 +18,12 @@ Done:
             is encoded in the connection matrix
     2022-04-16:
         - [4] rearranged diagram data to store only unique function interfaces
+    2022-04-18:
+        - [3.2] technically speaking we have this done now (unique func sections are OK)
 
 Planned:
     [3] make the first compiler (fbd --> python 3)
         [3.1] compile one diagram as one class with collected state
-        [3.2] compile unique functions of diagram as class functions
         [3.3] make the state of each FB instance a class variable
         [3.4] compile a "step" function for the entire diagram
             - this is where we run into cycle detection and order of execution problems
