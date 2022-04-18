@@ -28,7 +28,7 @@ class PyFunc(FBDFunc):
         self.template = code_template.load_template(template_name)
         return self.template
 
-    def compile_section(self, section: str, context: dict) -> str:
+    def compile_section(self, section: str, context: dict, indent=0) -> str:
         """Compile a specific section of this function's template."""
         self.prepare_data()
         sect = self.template.get_section_by_name(section)
@@ -37,6 +37,11 @@ class PyFunc(FBDFunc):
         sect_data = context.copy()
         sect_data.update(self.global_data)
         code_template.fill_section(sect, sect_data)
+        if indent:
+            ret = ""
+            for line in sect.content.splitlines():
+                ret += int(indent) * " " + line + "\n"
+            return ret
         return sect.content
 
     def compile_sections(self, context: dict) -> dict:

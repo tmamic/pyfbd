@@ -12,15 +12,19 @@ from datetime import datetime
 from pyfbd.diagram import FBDiagram
 from pyfbd.fbd2py.pyfunc import PyFunc
 from pyfbd import code_template
+from pyfbd.code_template import Template
 
 class PyDiagram(FBDiagram):
+
+    UNIQUE_SECTS = ("type_defs", "func_def")
+    INSTANCE_SECTS = ("state_def", "func_call")
 
     def transform_objects(self) -> None:
         """Transforms generic objects into their PyDiagram versions."""
         for fname, func in self._unique_functions.items():
             self._unique_functions[fname] = PyFunc.load(func.dump())
 
-    def make_fb_links(self, template: code_template.Template) -> dict:
+    def make_fb_links(self, template: Template) -> dict:
         """
         Create a dictionary of variable assignments which matches the data flow specified
         by connection matrix.
@@ -56,14 +60,19 @@ class PyDiagram(FBDiagram):
             print(f"[INFO] Free outputs: {ret['free_out']}")
         return ret
 
-    def make_typedefs(self) -> str:
-        """Collect typedef outptus of functions."""
-        # gather function outputs for typedefs
-        typedef_out = ""
-        for _, func in self._unique_functions.items():
-            output = func.compile_section("type_defs", {})
-            typedef_out += output
-        return typedef_out
+    def fill_input_section(self, template:Template,  sect: str, contributors) -> None:
+        """Locate input section from template and fill it from contributors' output sections."""
+        in_section = template.get_section_by_name(sect)
+        if in_section.type != "in":
+            raise ValueError("Supplied section name does not point to input section.")
+
+        ret = ""
+        indent = in_section.properties['indent'] if 'indent' in in_section.properties else 0
+        for func in contributors:
+            ret += func.compile_section(sect, {}, indent)
+        if ret:
+            in_section.content = ret
+            in_section.complete = True
 
     def compile(self, fname: str) -> None:
         """Converts the data content of this diagram into python code."""
@@ -85,7 +94,18 @@ class PyDiagram(FBDiagram):
                        'nfbs': len(self.function_blocks),
                        'nconn': len(self.connections)}
 
-        global_data["type_defs"] = self.make_typedefs()
+        # fill in sections to which unique functions contribute
+        for sect_name in self.UNIQUE_SECTS:
+            unq = (func for _, func in self._unique_functions.items())
+            self.fill_input_section(template, sect_name, unq)
+            global_data[sect_name] = template.get_section_by_name(sect_name).content
+
+        # fill in sections where each fb instance contributes
+        for sect_name in self.INSTANCE_SECTS:
+            fnames = (fname for _, fname in self.function_blocks.items())
+            ins = (self._unique_functions[fname] for fname in fnames)
+            self.fill_input_section(template, sect_name, ins)
+            global_data[sect_name] = template.get_section_by_name(sect_name).content
 
         for sect in template.sections:
             code_template.fill_section(sect, global_data)
