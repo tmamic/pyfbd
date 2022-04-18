@@ -15,7 +15,7 @@ class <!name>State:
 <#end>
 
 <#out:state_def>
-    <!uid>_state = <!name>State(ACC=0)
+    diagram.<!uid>_state = <!name>State(ACC=0)
 <#end>
 
 <#out:func_def>

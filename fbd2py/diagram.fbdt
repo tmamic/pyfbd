@@ -24,7 +24,7 @@ from dataclasses import dataclass
 <#out:class_def>
 class FBD<!schname>:
     '''Data model of diagram '<!source>'.'''
-    def __init__(self):
+    def __init__(diagram):
         <#in:state_def, indent=8>
         pass
         <#end>

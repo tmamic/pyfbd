@@ -7,12 +7,25 @@
 
 # built-in
 from datetime import datetime
+import re
 
 # internal
 from pyfbd.diagram import FBDiagram
 from pyfbd.fbd2py.pyfunc import PyFunc
 from pyfbd import code_template
 from pyfbd.code_template import Template
+
+UID_REGEX = re.compile(r"(.*)\[(.*)\]")
+
+def _empty_context_iter() -> dict:
+    """Utility: use to yield infinite empty contexts."""
+    while True:
+        yield dict()
+
+def _uid_to_var_prefix(uid: str, fname: str) -> str:
+    """Convert FB UID to a prefix useable in variable names."""
+    uid_parts = re.findall(UID_REGEX, uid)[0]
+    return f"{fname}_{uid_parts[1]}"
 
 class PyDiagram(FBDiagram):
 
@@ -23,6 +36,16 @@ class PyDiagram(FBDiagram):
         """Transforms generic objects into their PyDiagram versions."""
         for fname, func in self._unique_functions.items():
             self._unique_functions[fname] = PyFunc.load(func.dump())
+
+    def collect_instance_data(self) -> dict:
+        """Generate a dictionary of data fields for each FB instance."""
+        ret = {}
+        for uid, fname in self.function_blocks.items():
+            data = {'uid': _uid_to_var_prefix(uid, fname)}
+            func = self._unique_functions[fname]
+            # fill with other stuff too
+            ret[uid] = data
+        return ret
 
     def make_fb_links(self, template: Template) -> dict:
         """
@@ -60,16 +83,17 @@ class PyDiagram(FBDiagram):
             print(f"[INFO] Free outputs: {ret['free_out']}")
         return ret
 
-    def fill_input_section(self, template:Template,  sect: str, contributors) -> None:
+    def fill_input_section(self, template:Template,  sect: str, contributors, context=None) -> None:
         """Locate input section from template and fill it from contributors' output sections."""
+        ctxt = context if context is not None else _empty_context_iter()
         in_section = template.get_section_by_name(sect)
         if in_section.type != "in":
             raise ValueError("Supplied section name does not point to input section.")
 
         ret = ""
         indent = in_section.properties['indent'] if 'indent' in in_section.properties else 0
-        for func in contributors:
-            ret += func.compile_section(sect, {}, indent)
+        for func, fctx in zip(contributors, ctxt):
+            ret += func.compile_section(sect, fctx, indent)
         if ret:
             in_section.content = ret
             in_section.complete = True
@@ -78,6 +102,7 @@ class PyDiagram(FBDiagram):
         """Converts the data content of this diagram into python code."""
         # specialize objects for PyFBD
         self.transform_objects()
+        instance_data = self.collect_instance_data()
 
         if not fname.endswith(".py"):
             fname += ".py"
@@ -101,10 +126,11 @@ class PyDiagram(FBDiagram):
             global_data[sect_name] = template.get_section_by_name(sect_name).content
 
         # fill in sections where each fb instance contributes
+        fdata = [(uid, fname) for uid, fname in self.function_blocks.items()]
+        ins = [self._unique_functions[fname] for _, fname in fdata]
+        ctxts = [instance_data[uid] for uid, _ in fdata]
         for sect_name in self.INSTANCE_SECTS:
-            fnames = (fname for _, fname in self.function_blocks.items())
-            ins = (self._unique_functions[fname] for fname in fnames)
-            self.fill_input_section(template, sect_name, ins)
+            self.fill_input_section(template, sect_name, ins, ctxts)
             global_data[sect_name] = template.get_section_by_name(sect_name).content
 
         for sect in template.sections:
